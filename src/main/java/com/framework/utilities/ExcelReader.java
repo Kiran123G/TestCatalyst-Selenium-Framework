@@ -17,7 +17,6 @@ public class ExcelReader {
         workbook = WorkbookFactory.create(file);
         sheet = workbook.getSheet(sheetName);
 
-        // Get the number of rows and columns
         int rows = sheet.getPhysicalNumberOfRows();
         int cols = sheet.getRow(0).getPhysicalNumberOfCells();
 
@@ -35,7 +34,7 @@ public class ExcelReader {
         return data;
     }
 
-    // Close the workbook
+    
     public static void closeWorkbook() throws IOException {
         workbook.close();
     }
