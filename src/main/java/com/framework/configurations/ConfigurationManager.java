@@ -12,7 +12,7 @@ public class ConfigurationManager {
     private ConfigurationManager() {}
 
     public static FrameworkConfig getConfig() {
-        if (config == null) {
+        if (config == null) {	
             // Fetch environment from system property or default to "stage"
             String env = System.getProperty("env", "stage");
             String configFilePath = "src/main/resources/configs/" + env + ".properties";
