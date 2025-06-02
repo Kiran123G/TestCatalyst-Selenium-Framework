@@ -1,6 +1,7 @@
 package com.framework.configurations;
 
 import org.aeonbits.owner.Config;
+import com.framework.constants.FrameworkConstants;
 import org.aeonbits.owner.Config.Sources;
 import org.aeonbits.owner.Config.LoadPolicy;
 
@@ -36,4 +37,10 @@ public interface FrameworkConfig extends Config {
 
     @Key("app.version")
     String appVersion();
+    
+    @Key("${env}.username")
+    String getUsername();
+    
+    @Key("${env}.password")
+    String getPassword();
 }

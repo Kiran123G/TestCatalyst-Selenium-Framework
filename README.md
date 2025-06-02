@@ -96,6 +96,53 @@ After test execution, detailed HTML reports are generated in the `/reports` dire
 - Logs for each test step.
 - Screenshots for failed tests.
 
+
+
+🛠 Configuration with Owners & Constants
+
+| Component                   | Description                                                              |
+| --------------------------- | ------------------------------------------------------------------------ |
+| `FrameworkConfig.java`      | Defines property keys using the Owners library                           |
+| `ConfigurationManager.java` | Singleton class to load and provide config instance                      |
+| `FrameworkConstants.java`   | Exposes configuration values as static constants for global access       |
+| `config.properties`         | Located in `src/test/resources`; holds key-value pairs for configuration |
+
+---
+
+🔧 Sample config.properties
+
+properties
+base.url=https://example.com
+username=testuser
+password=admin123
+implicit.wait=10
+explicit.wait=20
+report.path=test-output/reports
+
+
+---
+
+🧪 Usage Example in Code**
+
+java
+String url = FrameworkConstants.BASE_URL;
+loginPage.validateLogin(FrameworkConstants.USER_NAME, FrameworkConstants.PASSWORD);
+
+
+
+🌐 Environment Support (Optional)**
+
+| Feature                          | Command                                                        |
+| -------------------------------- | -------------------------------------------------------------- |
+| Load environment-specific config | Annotate with `@Config.Sources("classpath:${env}.properties")` |
+| Set environment                  | `-Denv=qa` (loads `qa.properties`)                             |
+
+
+
+
+
+
+
  Contributing
 
 I welcome contributions to improve this framework! If you’d like to help out, just fork the repository, make your changes, and then submit a pull request. Let’s work together to make this even better!
