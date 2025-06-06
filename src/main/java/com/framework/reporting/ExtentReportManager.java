@@ -6,6 +6,8 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.framework.utilities.ScreenshotUtility;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 import org.openqa.selenium.WebDriver;
@@ -17,9 +19,10 @@ public class ExtentReportManager {
 
     public static ExtentReports getInstance() {
         if (extentReports == null) {
-            String reportPath = System.getProperty("user.dir") + "/reports/ExtentReport.html";
+        	String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        	String reportPath = System.getProperty("user.dir") + "/reports/ExtentReport_" + timestamp + ".html";
             createReportsFolderIfNotExists();
-
+	
             ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
             sparkReporter.config().setReportName("Automation Test Report");
             sparkReporter.config().setDocumentTitle("Test Execution Report");
@@ -31,6 +34,7 @@ public class ExtentReportManager {
         }
         return extentReports;
     }
+
 
     private static void createReportsFolderIfNotExists() {
         String reportFolderPath = System.getProperty("user.dir") + "/reports";
@@ -54,10 +58,23 @@ public class ExtentReportManager {
     public static ExtentTest getTest() {
         return extentTestThreadLocal.get();
     }
+    
+    
+    
 
+    
     public static void endTest() {
-        extentReports.flush();
-    }
+        if (extentReports != null) {
+            System.out.println("Flushing ExtentReports...");
+            extentReports.flush();
+            String reportPath = System.getProperty("user.dir") + "/reports/ExtentReport.html";
+            System.out.println("Extent Report generated at: " + reportPath);
+        } else {
+            System.err.println("ExtentReports instance is null. Cannot flush.");
+        }
+    }	
+	
+	
 
     // Method to log failure and capture screenshots
     public static void handleFailure(Throwable throwable, WebDriver driver) {

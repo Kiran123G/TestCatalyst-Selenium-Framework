@@ -11,50 +11,50 @@ import org.testng.ITestResult;
 
 public class TestEventListener implements ITestListener {
 
+    // No constructor needed; get driver dynamically
     private WebDriver driver;
-    public TestEventListener(WebDriver driver) {
-        this.driver = driver;
-    }
 
     @Override
     public void onTestStart(ITestResult result) {
-        String testName = result.getMethod().getMethodName();
-        ExtentReportManager.startTest(testName, "Test started: " + testName);
-        LoggerUtility.info("Test started: " + testName);
+        ExtentReportManager.startTest(result.getMethod().getMethodName(), "Test started: " + result.getMethod().getMethodName());
+        LoggerUtility.info("Test started: " + result.getMethod().getMethodName());
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        String testName = result.getMethod().getMethodName();
-        ExtentReportManager.getTest().log(Status.PASS, "Test passed: " + testName);
-        LoggerUtility.info("Test passed: " + testName);
+        ExtentReportManager.getTest().log(Status.PASS, "Test passed: " + result.getMethod().getMethodName());
+        LoggerUtility.info("Test passed: " + result.getMethod().getMethodName());
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        String testName = result.getMethod().getMethodName();
-        
-       
-        ScreenshotUtility screenshotUtility = new ScreenshotUtility(driver);
-        String screenshotPath = screenshotUtility.captureScreenshot(testName);
+        driver = WebDriverManager.getDriver();  // get the current thread’s driver
 
-      
-        ExtentReportManager.getTest().log(Status.FAIL, "Test failed: " + testName);
+        ScreenshotUtility screenshotUtility = new ScreenshotUtility(driver);
+        String screenshotPath = screenshotUtility.captureScreenshot(result.getMethod().getMethodName());
+
+        ExtentReportManager.getTest().log(Status.FAIL, "Test failed: " + result.getMethod().getMethodName());
         ExtentReportManager.getTest().log(Status.FAIL, result.getThrowable());
-        ExtentReportManager.getTest().addScreenCaptureFromPath(screenshotPath);  
-        LoggerUtility.error("Test failed: " + testName, result.getThrowable());
+        try {
+            ExtentReportManager.getTest().addScreenCaptureFromPath(screenshotPath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LoggerUtility.error("Test failed: " + result.getMethod().getMethodName(), result.getThrowable());
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        String testName = result.getMethod().getMethodName();
-        ExtentReportManager.getTest().log(Status.SKIP, "Test skipped: " + testName);
-        LoggerUtility.warn("Test skipped: " + testName);
+        ExtentReportManager.getTest().log(Status.SKIP, "Test skipped: " + result.getMethod().getMethodName());
+        LoggerUtility.warn("Test skipped: " + result.getMethod().getMethodName());
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        ExtentReportManager.endTest();
+        ExtentReportManager.endTest();  // this flushes and saves the report
         LoggerUtility.info("Test execution completed.");
     }
+	
+    
+    
 }
