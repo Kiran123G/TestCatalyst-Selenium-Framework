@@ -20,4 +20,4 @@ public class LoginTest extends BaseTest {
         loginPage.validateLogin(FrameworkConstants.USER_NAME, FrameworkConstants.PASSWORD);
     }
 }
-		
+			
